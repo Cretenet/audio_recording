@@ -2,13 +2,51 @@
 <html>
     <head>
         <meta name="csrf-token" content="{{ csrf_token }}">
+        <style>
+            body {
+                background-color: rgb(44, 44, 44);
+            }
+            .center {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                background-color: rgb(44, 44, 44);
+            }
+            button {
+                margin: 5px;
+            }
+            h3 {
+                color: white;
+                font-family: Arial;
+                font-weight: normal;
+                font-size: x-large;
+            }
+            footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background-color: darkgray;
+                color: white;
+                text-align: center;
+                padding: 10px;
+            }
+        </style>
     </head>
     <body>
-        <h2>Record Audio</h2>
+        <div class="center">
+            <h3>{{sentence}}</h3>
+            <button id="start_button" type="button">Start Recording</button>
+            <button id="stop_button" type="button" disabled>Stop and Next</button>
+        </div>
+        
+        <p id="number" style="display: none;">{{number}}</p>
 
-        <button id="start_button" type="button">Start Recording</button>
-        <button id="stop_button" type="button" disabled>Stop and Next</button>
-        <p id="number" style="display: none;">This is an invisible paragraph.</p>
+        <footer>
+            <button id="navigation_button_prev" type="button"> <-- Previous</button>
+            <button id="navigation_button_next" type="button">Next --> </button>
+        </footer>
         <script>
 
             let chunks = [];
@@ -46,7 +84,7 @@
                     fetch('/record/upload_audio/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
                         .then(response => response.json())
                         .then(data => {
-                            document.querySelector('h2').textContent = data['sentence'];
+                            document.querySelector('h3').textContent = data['sentence'];
                             document.querySelector('p').textContent = data['number'];
                         })
                         .catch((error) => console.error(error));
@@ -55,7 +93,59 @@
                 document.getElementById('start_button').disabled = false;
             };
 
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (document.getElementById('start_button').disabled === false) {
+                        document.getElementById('start_button').click();
+                    } else if (document.getElementById('stop_button').disabled === false) {
+                        document.getElementById('stop_button').click();
+                    }
+                }
+                else if (e.key === 'ArrowLeft') {
+                    document.getElementById('navigation_button_prev').click();
+                }
+                else if (e.key === 'ArrowRight') {
+                    document.getElementById('navigation_button_next').click();
+                }
+            });
 
+
+            document.getElementById('navigation_button_prev').onclick = function() {
+                var number = document.getElementById('number').innerText;
+                var csrftoken = document.querySelector('[name=csrf-token]').content;
+                if (!Number.isInteger(parseFloat(number))) {
+                    var number = 0;
+                }
+                if (number != "1") {
+                    let formData = new FormData();
+                    formData.append('number', parseFloat(number)-1);
+                    fetch('/record/go_to/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
+                    .then(response => response.json())
+                    .then(data => {
+                        document.querySelector('h3').textContent = data['sentence'];
+                        document.querySelector('p').textContent = data['number'];
+                    })
+                    .catch((error) => console.error(error));
+                }
+            };
+
+
+            document.getElementById('navigation_button_next').onclick = function() {
+                var number = document.getElementById('number').innerText;
+                var csrftoken = document.querySelector('[name=csrf-token]').content;
+                if (!Number.isInteger(parseFloat(number))) {
+                    var number = 0;
+                }
+                let formData = new FormData();
+                formData.append('number', parseFloat(number)+1);
+                fetch('/record/go_to/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector('h3').textContent = data['sentence'];
+                    document.querySelector('p').textContent = data['number'];
+                })
+                .catch((error) => console.error(error));
+            };
         </script>
     </body>
 </html>
