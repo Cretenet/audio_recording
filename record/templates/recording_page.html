@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="csrf-token" content="{{ csrf_token }}">
+    </head>
+    <body>
+        <h2>Record Audio</h2>
+
+        <button id="start_button" type="button">Start Recording</button>
+        <button id="stop_button" type="button" disabled>Stop and Next</button>
+        <p id="number" style="display: none;">This is an invisible paragraph.</p>
+        <script>
+
+            let chunks = [];
+            let recorder;
+
+            document.getElementById('start_button').onclick = function() {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        recorder = new MediaRecorder(stream);
+                        recorder.start();
+                        
+                        recorder.ondataavailable = e => {
+                            chunks.push(e.data);
+                        };
+                    });
+                this.disabled = true;
+                document.getElementById('stop_button').disabled = false;
+            };
+
+            document.getElementById('stop_button').onclick = function() {
+                recorder.stop();
+                
+                recorder.onstop = (e) => {
+                    let blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
+                    chunks = [];
+                    var number = document.getElementById('number').innerText;
+                    if (!Number.isInteger(parseFloat(number))) {
+                        var number = 0;
+                    }
+                    
+                    var csrftoken = document.querySelector('[name=csrf-token]').content;
+                    let formData = new FormData();
+                    formData.append('audio_file', blob, 'audio.wav');
+                    formData.append('number', number);
+                    fetch('/record/upload_audio/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector('h2').textContent = data['sentence'];
+                            document.querySelector('p').textContent = data['number'];
+                        })
+                        .catch((error) => console.error(error));
+                };
+                this.disabled = true;
+                document.getElementById('start_button').disabled = false;
+            };
+
+
+        </script>
+    </body>
+</html>
