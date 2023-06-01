@@ -47,3 +47,4 @@ def handle_uploaded_file(f, number):
     with open(f'audios/audio{number}.wav', 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    #clear_audio(number)

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-wbb3lbcomm&&h0tcn@sf!5p8#la=3*7idmvb^1cmppx58r6p7+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['esh-hub-p1.internal.eshmedias.ch', 'localhost', '127.0.0.1']
 
 
 # Application definition
