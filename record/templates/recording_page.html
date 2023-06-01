@@ -43,6 +43,28 @@
         
         <p id="number" style="display: none;">{{number}}</p>
 
+        <script type="text/javascript">
+            var input = prompt('Please enter the password:');
+            
+            var csrftoken = document.querySelector('[name=csrf-token]').content;
+            var success;
+            let formData = new FormData();
+            formData.append('pass', input);
+            fetch('/record/check_pass/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
+                .then(response => response.json())
+                .then(data => {
+                    if(data['success'] !== 'yes') {
+                        document.getElementById('stop_button').disabled = true;
+                        document.getElementById('start_button').disabled = true;
+                        document.getElementById('navigation_button_prev').disabled = true;
+                        document.getElementById('navigation_button_next').disabled = true;
+                    }
+                })
+                .catch((error) => console.error(error));
+
+            
+        </script>
+
         <footer>
             <button id="navigation_button_prev" type="button"> <-- Previous</button>
             <button id="navigation_button_next" type="button">Next --> </button>

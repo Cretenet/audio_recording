@@ -48,3 +48,13 @@ def handle_uploaded_file(f, number):
         for chunk in f.chunks():
             destination.write(chunk)
     #clear_audio(number)
+
+
+def check_pass(request):
+    if request.method == 'POST':
+        password = request.POST.get('pass')
+        if password == 'password':
+            return JsonResponse({'success' : 'yes'})
+        else:
+            return JsonResponse({'success' : 'no'})
+    return render(request, 'recording_page.html')

@@ -25,7 +25,9 @@ SECRET_KEY = "django-insecure-wbb3lbcomm&&h0tcn@sf!5p8#la=3*7idmvb^1cmppx58r6p7+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['esh-hub-p1.internal.eshmedias.ch', 'localhost', '127.0.0.1']
+# DONT FORGET TO CHANGE THIS TO THE CORRECT URL
+ALLOWED_HOSTS = ['esh-hub-p1.internal.eshmedias.ch', 'localhost', '127.0.0.1', 'audio-recording.eshmedias.ch']
+SRF_TRUSTED_ORIGINS = ['audio-recording.eshmedias.ch']
 
 
 # Application definition
@@ -122,3 +124,4 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
