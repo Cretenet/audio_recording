@@ -2,9 +2,67 @@
 <html>
     <head>
         <meta name="csrf-token" content="{{ csrf_token }}">
+        <title>Audio Recording</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <style>
+            .start-recording-button {
+                font-size: 70px;
+                color: #435f7a;
+                cursor: pointer;
+                opacity: .5;
+                margin-bottom: 30px;
+            }
+            .start-recording-button:hover {
+                opacity: 1;
+            }
+            .fa{
+                font-size: 30px;
+                opacity: 0.7;
+                cursor: pointer;
+            }
+            .fa:hover{
+                opacity: 1;
+            }
+            .recording-contorl-buttons-container {
+                /*targeting Chrome & Safari*/
+                display: -webkit-flex;
+                /*targeting IE10*/
+                display: -ms-flex;
+                display: flex;
+                justify-content: space-evenly;
+                /*horizontal centering*/
+                align-items: center;
+                width: 334px;
+                margin-bottom: 30px;
+            }
+            .stop-recording-button {
+                font-size: 50px;
+                cursor: pointer;
+            }
+            .stop-recording-button {
+                color: #33cc33;
+                opacity: 0.7;
+            }
+            .stop-recording-button:hover {
+                color: #27a527;
+            }
+            .recording-contorl-buttons-container.hide {
+                display: none;
+            }
+            .start-recording-button {
+                font-size: 50px;
+                color: white;
+                cursor: pointer;
+            }
             body {
                 background-color: rgb(44, 44, 44);
+                font-family: "Lato", sans-serif;
+            }
+            footer div {
+                display: flex;
+                justify-content: space-evenly;
+                align-items: center;
+                color: rgb(44, 44, 44);
             }
             .center {
                 display: flex;
@@ -19,7 +77,17 @@
             }
             h3 {
                 color: white;
-                font-family: Arial;
+                font-weight: normal;
+                font-size: x-large;
+                text-align: center;
+            }
+            .recording-message {
+                color: white;
+                font-weight: normal;
+                font-size: large;
+            }
+            p {
+                color: rgb(44, 44, 44);
                 font-weight: normal;
                 font-size: x-large;
             }
@@ -27,52 +95,55 @@
                 position: fixed;
                 bottom: 0;
                 width: 100%;
-                background-color: darkgray;
-                color: white;
+                background-color: white;
+                color: rgb(44, 44, 44);
                 text-align: center;
-                padding: 10px;
             }
-        </style>
+       </style>
     </head>
     <body>
         <div class="center">
             <h3>{{sentence}}</h3>
-            <button id="start_button" type="button">Start Recording</button>
-            <button id="stop_button" type="button" disabled>Stop and Next</button>
+            <i id="start_button" class="start-recording-button fa fa-microphone" aria-hidden="true"></i>
+            <div class="recording-contorl-buttons-container hide">
+                <i class="recording-message">Recording in progress...</i>
+                <i id="stop-button" class="stop-recording-button fa fa-stop-circle-o" aria-hidden="true"></i>
+            </div>            
+            
         </div>
-        
-        <p id="number" style="display: none;">{{number}}</p>
-
-        <script type="text/javascript">
-            var input = prompt('Please enter the password:');
-            
-            var csrftoken = document.querySelector('[name=csrf-token]').content;
-            var success;
-            let formData = new FormData();
-            formData.append('pass', input);
-            fetch('/record/check_pass/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
-                .then(response => {
-                    if (response.status !== 200) {
-                        window.location.href = '/record/failure';
-                    }
-                })
-                .catch((error) => console.error(error));
-
-            
-        </script>
-
         <footer>
-            <button id="navigation_button_prev" type="button"> <-- Previous</button>
-            <button id="navigation_button_next" type="button">Next --> </button>
+            <div>
+                <i id="navigation_button_prev" class="fa fa-arrow-left"></i>
+                <p id="number">{{number}}</p>
+                <i id="navigation_button_next" class="fa fa-arrow-right"></i>
+            </div>
         </footer>
         <script>
 
             let chunks = [];
             let recorder;
+            let stream;
+            var recording = false;
+            var microphoneButton = document.getElementsByClassName("start-recording-button")[0];
+            var recordingContainer = document.getElementsByClassName("recording-contorl-buttons-container")[0];
+            var stopButton = document.getElementsByClassName("stop-recording-button")[0];
+            var navigationButtonPrev = document.getElementById("navigation_button_prev");
+            var navigationButtonNext = document.getElementById("navigation_button_next");
+            // Listeners
+            microphoneButton.onclick = startRecording;
+            stopButton.onclick = stopRecording;
+            navigationButtonPrev.onclick = prevPage;
+            navigationButtonNext.onclick = nextPage;
 
-            document.getElementById('start_button').onclick = function() {
+            // Functions
+            function startRecording() {
+                recording = true;
+                microphoneButton.style.display = "none";
+                recordingContainer.style.display = "flex";
+
                 navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(stream => {
+                    .then(s => {
+                        stream = s;
                         recorder = new MediaRecorder(stream);
                         recorder.start();
                         
@@ -80,11 +151,12 @@
                             chunks.push(e.data);
                         };
                     });
-                this.disabled = true;
-                document.getElementById('stop_button').disabled = false;
             };
 
-            document.getElementById('stop_button').onclick = function() {
+            function stopRecording() {
+                recording = false;
+                microphoneButton.style.display = "block";
+                recordingContainer.style.display = "none";
                 recorder.stop();
                 
                 recorder.onstop = (e) => {
@@ -107,32 +179,31 @@
                         })
                         .catch((error) => console.error(error));
                 };
-                this.disabled = true;
-                document.getElementById('start_button').disabled = false;
+                stream.getTracks().forEach(track => track.stop());
             };
 
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    if (document.getElementById('start_button').disabled === false) {
-                        document.getElementById('start_button').click();
-                    } else if (document.getElementById('stop_button').disabled === false) {
-                        document.getElementById('stop_button').click();
+                    if (! recording){
+                        startRecording();
+                    } else {
+                        stopRecording();
                     }
                 }
                 else if (e.key === 'ArrowLeft') {
-                    document.getElementById('navigation_button_prev').click();
+                    prevPage();
                 }
                 else if (e.key === 'ArrowRight') {
-                    document.getElementById('navigation_button_next').click();
+                    nextPage();
                 }
             });
 
 
-            document.getElementById('navigation_button_prev').onclick = function() {
+            function prevPage() {
                 var number = document.getElementById('number').innerText;
                 var csrftoken = document.querySelector('[name=csrf-token]').content;
                 if (!Number.isInteger(parseFloat(number))) {
-                    var number = 0;
+                    var number = "1";
                 }
                 if (number != "1") {
                     let formData = new FormData();
@@ -148,11 +219,11 @@
             };
 
 
-            document.getElementById('navigation_button_next').onclick = function() {
+            function nextPage() {
                 var number = document.getElementById('number').innerText;
                 var csrftoken = document.querySelector('[name=csrf-token]').content;
                 if (!Number.isInteger(parseFloat(number))) {
-                    var number = 0;
+                    var number = "1";
                 }
                 let formData = new FormData();
                 formData.append('number', parseFloat(number)+1);
