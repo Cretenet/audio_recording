@@ -1,7 +1,7 @@
-#Overview
+# Overview
 Audio Recording is a web-based software designed for Data Scientists (including AI engineers, Machine Learning engineers, and others) to facilitate efficient speech data recording. It accepts a list of sentences and sequentially presents them for the user to record. It's important to note that this software prioritizes convenience over traditional web development best practices.
 
-#Installation Steps
+# Installation Steps
 To set up the Audio Recording software, follow these steps after downloading:
 
   1. **Add Sentences:** Create a metadata.csv file containing sentences in the format: name_of_audio|sentence to record for each row.
@@ -18,7 +18,7 @@ To set up the Audio Recording software, follow these steps after downloading:
 
 Now you're ready to launch the server. If running on a server, use python manage.py runserver 0.0.0.0:4000, replacing 4000 with your preferred port. Access the web interface at 'https://name_of_your_serv:4000'. For local execution, use python manage.py runserver 4000 and access the software at '127.0.0.1:4000' in your web browser.
 
-#User Guide
+# User Guide
 When accessing the website, you'll be redirected to the login page. After logging in, you'll land on the main page where you can see the current sentence to record (e.g., if you've already recorded 5 sentences, the 6th will be displayed) and a record button.
 <br>
 <br>
