@@ -1,13 +1,27 @@
-# Introduction
-Audio Recording is a software that allows the user to record speech data efficiently on a web interface. It is possible to give a list of sentences and the system displays them in order and allows the user to record themselves saying each of them. This project is created by and for Data Scientists (Ai engineers, Machine Learning engineers, and so on), so it does not necessarily follow the good practices in the field of web developpment. Its only purpose is to be as convenient as possible.
-# Installation
-When you download audio_recording, make sure that you :
-- Add a metadata.csv file, that contains the sentences in the following format for each row : name_of_audio|sentence to record
-- Create a folder named audios (at the root), in which the audios will be uploaded.
-- Create a superuser using the `python manage.py createsuperuser` command.
-- Migrate your new superuser to the database using `python manage.py migrate`.
-- Create a user using the python script 'create_user.py' (modify it according to your needs) or via the admin dashboard that can be reached typing 'address_of_your_website/admin' (recommended). It is necessary to be connected as user to be able to reach the main page.
-- Add your host to the ALLOWED_HOSTS and in CSRF_TRUSTED_ORIGINS.
-Now that everything is ready, you can start the server. If you are on a server, type `python manage.py runserver 0.0.0.0:4000` where 4000 can be changed to any port, you can then access it by going to 'https://name_of_your_serv:4000'. If you want to run it locally, you can simply type  `python manage.py runserver 4000` where, again, 4000 can be replaced with any port, and you can access it by typing '127.0.0.1:4000' in your browser.
-# Usage
-When trying to reach the website, you should be redirected to the login page. Login and access the main page. From here, you can see the current sentence (if you already recorded 5, it will be the 6th) and a record button. The record button lets you record yourself by clicking and then clicking on the stop button. You can navigate to the next or to the previous sentence with the arrows. Going back to a sentence that is already recorded and record it again allows you to replace the old version. You can see all the recorded audio files by clicking on the folder (top-left). From there, you can directly download all the files with the button or listen to them one by one. You can come back to the main page with the microphone button (top-left).
+#Overview
+Audio Recording is a web-based software designed for Data Scientists (including AI engineers, Machine Learning engineers, and others) to facilitate efficient speech data recording. It accepts a list of sentences and sequentially presents them for the user to record. It's important to note that this software prioritizes convenience over traditional web development best practices.
+
+#Installation Steps
+To set up the Audio Recording software, follow these steps after downloading:
+
+  1. **Add Sentences:** Create a metadata.csv file containing sentences in the format: name_of_audio|sentence to record for each row.
+
+  2. **Audio Folder:** Create a folder named audios at the root level. This is where the recorded audio files will be stored.
+
+  3. **Create Superuser:** Use the command `python manage.py createsuperuser` to create a superuser.
+
+  4. **Migrate Superuser:** Use the command `python manage.py migrate` to migrate your new superuser to the database.
+
+  5. **Create User:** Use the python script 'create_user.py' (edit according to your needs) or through the admin dashboard (accessible by typing 'address_of_your_website/admin' - recommended). A user login is required to access the main page.
+
+  6. **Update Hosts:** Add your host to the ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS fields in audio_recording/settings.py.
+
+Now you're ready to launch the server. If running on a server, use python manage.py runserver 0.0.0.0:4000, replacing 4000 with your preferred port. Access the web interface at 'https://name_of_your_serv:4000'. For local execution, use python manage.py runserver 4000 and access the software at '127.0.0.1:4000' in your web browser.
+
+#User Guide
+When accessing the website, you'll be redirected to the login page. After logging in, you'll land on the main page where you can see the current sentence to record (e.g., if you've already recorded 5 sentences, the 6th will be displayed) and a record button.
+<br>
+<br>
+Clicking the record button starts the recording, and clicking the stop button ends it. You can navigate between sentences using the arrow buttons. Recording a sentence that's already been recorded will replace the old version.
+<br><br>
+The folder icon (top-left) lets you view all recorded audio files, where you can download them all at once or listen to individual files. Click on the microphone icon (top-left) to return to the main recording page.
