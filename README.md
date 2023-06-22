@@ -26,3 +26,6 @@ When accessing the website, you'll be redirected to the login page. After loggin
 Clicking the record button starts the recording, and clicking the stop button ends it. You can navigate between sentences using the arrow buttons. Recording a sentence that's already been recorded will replace the old version.
 <br><br>
 The folder icon (top-left) lets you view all recorded audio files, where you can download them all at once or listen to individual files. Click on the microphone icon (top-left) to return to the main recording page.
+
+# Acknowledgment
+It is only possible to record in a losless format (.wav) because of the amazing library WebAudioRecorder.js, here is the link to their [GitHub](https://github.com/higuma/web-audio-recorder-js).
