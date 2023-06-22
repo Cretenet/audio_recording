@@ -1,4 +1,5 @@
 audios
 metadata.csv
 db.sqlite3
-create_user.py
+record/__pycache__
+audio_recording/__pycache__

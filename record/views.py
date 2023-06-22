@@ -43,12 +43,10 @@ def go_to(request):
 
 def upload_audio(request):
     if request.method == 'POST':
-        form = AudioForm(request.POST, request.FILES)
-        if form.is_valid():
-            number = int(request.POST.get('number'))
-            handle_uploaded_file(request.FILES['audio_file'], number)
-            df = pd.read_csv(PROJECT_DIR + 'metadata.csv', skiprows=number, nrows=1, names=['filename', 'transcript'], delimiter='|', quotechar='\0', index_col=False)
-            return JsonResponse({'new_file_name' : str(df['filename']), 'sentence' : df['transcript'].to_list()[0], 'number' : str(number+1)})
+        number = int(request.POST['number'])
+        handle_uploaded_file(request.FILES['audio_file'], number)
+        df = pd.read_csv(PROJECT_DIR + 'metadata.csv', skiprows=number, nrows=1, names=['filename', 'transcript'], delimiter='|', quotechar='\0', index_col=False)
+        return JsonResponse({'new_file_name' : str(df['filename']), 'sentence' : df['transcript'].to_list()[0], 'number' : str(number+1)})
     return render(request, 'recording_page.html')
 
 
