@@ -1,99 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Audio List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/list.css' %}">
     <meta charset="utf-8">
-    <style>
-        .audio-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
-
-
-        .main-head{
-            height: 150px;
-            background: #FFF;
-        
-        }
-
-        .sidenav {
-            height: 100%;
-            background-color: rgb(44, 44, 44);
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-
-        .main {
-            padding: 0px 10px;
-        }
-
-        @media screen and (max-height: 450px) {
-            .sidenav {padding-top: 15px;}
-        }
-
-        @media screen and (max-width: 450px) {
-            .login-form{
-                margin-top: 10%;
-            }
-
-            .register-form{
-                margin-top: 10%;
-            }
-        }
-
-        @media screen and (min-width: 768px){
-            .main{
-                margin-left: 40%; 
-            }
-
-            .sidenav{
-                width: 40%;
-                position: fixed;
-                z-index: 1;
-                top: 0;
-                left: 0;
-            }
-
-            .login-form{
-                margin-top: 80%;
-            }
-
-            .register-form{
-                margin-top: 20%;
-            }
-        }
-
-
-        .login-main-text{
-            margin-top: 20%;
-            padding: 60px;
-            color: #fff;
-        }
-
-        .login-main-text h2{
-            font-weight: 300;
-        }
-
-        .btn-black{
-            background-color: rgb(44, 44, 44) !important;
-            color: #fff;
-        }
-    </style>
 </head>
 <body>
     
     <div class="sidenav">
+        <div class="top-left-link">
+            <i id="change_page_button" class="fa fa-microphone"></i>
+        </div>
         <div class="login-main-text">
            <h2>Audio Files</h2>
            <a href="{% url 'download_all' %}">
@@ -117,5 +39,10 @@
         </div>
      </div>
 </body>
+<script>
+    document.getElementById("change_page_button").addEventListener("click", function(){
+        window.location.href = "/record/recording_page";
+    });
+</script>
 </html>
 

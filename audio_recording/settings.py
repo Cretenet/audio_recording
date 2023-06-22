@@ -27,8 +27,8 @@ SECRET_KEY = "django-insecure-wbb3lbcomm&&h0tcn@sf!5p8#la=3*7idmvb^1cmppx58r6p7+
 DEBUG = True
 
 # DONT FORGET TO CHANGE THIS TO THE CORRECT URL
-ALLOWED_HOSTS = ['esh-hub-p1.internal.eshmedias.ch', 'localhost', '127.0.0.1', 'audio-recording.eshmedias.ch']
-SRF_TRUSTED_ORIGINS = ['audio-recording.eshmedias.ch']
+ALLOWED_HOSTS = ['esh-hub-p1.internal.eshmedias.ch', 'localhost', '127.0.0.1', 'audio-record.eshmedias.ch']
+CSRF_TRUSTED_ORIGINS = ['https://audio-record.eshmedias.ch']
 
 
 # Application definition
@@ -120,6 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 MEDIA_URL = '/audios/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'audios/')
 

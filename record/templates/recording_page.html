@@ -1,107 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <meta name="csrf-token" content="{{ csrf_token }}">
         <title>Audio Recording</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <style>
-            .start-recording-button {
-                font-size: 70px;
-                color: #435f7a;
-                cursor: pointer;
-                opacity: .5;
-                margin-bottom: 30px;
-            }
-            .start-recording-button:hover {
-                opacity: 1;
-            }
-            .fa{
-                font-size: 30px;
-                opacity: 0.7;
-                cursor: pointer;
-            }
-            .fa:hover{
-                opacity: 1;
-            }
-            .recording-contorl-buttons-container {
-                /*targeting Chrome & Safari*/
-                display: -webkit-flex;
-                /*targeting IE10*/
-                display: -ms-flex;
-                display: flex;
-                justify-content: space-evenly;
-                /*horizontal centering*/
-                align-items: center;
-                width: 334px;
-                margin-bottom: 30px;
-            }
-            .stop-recording-button {
-                font-size: 50px;
-                cursor: pointer;
-            }
-            .stop-recording-button {
-                color: #33cc33;
-                opacity: 0.7;
-            }
-            .stop-recording-button:hover {
-                color: #27a527;
-            }
-            .recording-contorl-buttons-container.hide {
-                display: none;
-            }
-            .start-recording-button {
-                font-size: 50px;
-                color: white;
-                cursor: pointer;
-            }
-            body {
-                background-color: rgb(44, 44, 44);
-                font-family: "Lato", sans-serif;
-            }
-            footer div {
-                display: flex;
-                justify-content: space-evenly;
-                align-items: center;
-                color: rgb(44, 44, 44);
-            }
-            .center {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                background-color: rgb(44, 44, 44);
-            }
-            button {
-                margin: 5px;
-            }
-            h3 {
-                color: white;
-                font-weight: normal;
-                font-size: x-large;
-                text-align: center;
-            }
-            .recording-message {
-                color: white;
-                font-weight: normal;
-                font-size: large;
-            }
-            p {
-                color: rgb(44, 44, 44);
-                font-weight: normal;
-                font-size: x-large;
-            }
-            footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                background-color: white;
-                color: rgb(44, 44, 44);
-                text-align: center;
-            }
-       </style>
+        <link rel="stylesheet" type="text/css" href="{% static '/css/recording.css' %}">
+        <script src="{% static '/js/javascripts/WebAudioRecorder.js' %}"></script>
+        <script src="{% static '/js/javascripts/WebAudioRecorderWav.min.js' %}"></script>
     </head>
     <body>
+        <div class="top-left-link">
+            <i id="change_page_button" class="fa fa-folder"></i>
+        </div>
         <div class="center">
             <h3>{{sentence}}</h3>
             <i id="start_button" class="start-recording-button fa fa-microphone" aria-hidden="true"></i>
@@ -114,127 +25,13 @@
         <footer>
             <div>
                 <i id="navigation_button_prev" class="fa fa-arrow-left"></i>
-                <p id="number">{{number}}</p>
+                <p id="number" class="number">{{number}}</p>
                 <i id="navigation_button_next" class="fa fa-arrow-right"></i>
             </div>
         </footer>
-        <script>
-
-            let chunks = [];
-            let recorder;
-            let stream;
-            var recording = false;
-            var microphoneButton = document.getElementsByClassName("start-recording-button")[0];
-            var recordingContainer = document.getElementsByClassName("recording-contorl-buttons-container")[0];
-            var stopButton = document.getElementsByClassName("stop-recording-button")[0];
-            var navigationButtonPrev = document.getElementById("navigation_button_prev");
-            var navigationButtonNext = document.getElementById("navigation_button_next");
-            // Listeners
-            microphoneButton.onclick = startRecording;
-            stopButton.onclick = stopRecording;
-            navigationButtonPrev.onclick = prevPage;
-            navigationButtonNext.onclick = nextPage;
-
-            // Functions
-            function startRecording() {
-                recording = true;
-                microphoneButton.style.display = "none";
-                recordingContainer.style.display = "flex";
-
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then(s => {
-                        stream = s;
-                        recorder = new MediaRecorder(stream);
-                        recorder.start();
-                        
-                        recorder.ondataavailable = e => {
-                            chunks.push(e.data);
-                        };
-                    });
-            };
-
-            function stopRecording() {
-                recording = false;
-                microphoneButton.style.display = "block";
-                recordingContainer.style.display = "none";
-                recorder.stop();
-                
-                recorder.onstop = (e) => {
-                    let blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
-                    chunks = [];
-                    var number = document.getElementById('number').innerText;
-                    if (!Number.isInteger(parseFloat(number))) {
-                        var number = 0;
-                    }
-                    
-                    var csrftoken = document.querySelector('[name=csrf-token]').content;
-                    let formData = new FormData();
-                    formData.append('audio_file', blob, 'audio.wav');
-                    formData.append('number', number);
-                    fetch('/record/upload_audio/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
-                        .then(response => response.json())
-                        .then(data => {
-                            document.querySelector('h3').textContent = data['sentence'];
-                            document.querySelector('p').textContent = data['number'];
-                        })
-                        .catch((error) => console.error(error));
-                };
-                stream.getTracks().forEach(track => track.stop());
-            };
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    if (! recording){
-                        startRecording();
-                    } else {
-                        stopRecording();
-                    }
-                }
-                else if (e.key === 'ArrowLeft') {
-                    prevPage();
-                }
-                else if (e.key === 'ArrowRight') {
-                    nextPage();
-                }
-            });
-
-
-            function prevPage() {
-                var number = document.getElementById('number').innerText;
-                var csrftoken = document.querySelector('[name=csrf-token]').content;
-                if (!Number.isInteger(parseFloat(number))) {
-                    var number = "1";
-                }
-                if (number != "1") {
-                    let formData = new FormData();
-                    formData.append('number', parseFloat(number)-1);
-                    fetch('/record/go_to/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('h3').textContent = data['sentence'];
-                        document.querySelector('p').textContent = data['number'];
-                    })
-                    .catch((error) => console.error(error));
-                }
-            };
-
-
-            function nextPage() {
-                var number = document.getElementById('number').innerText;
-                var csrftoken = document.querySelector('[name=csrf-token]').content;
-                if (!Number.isInteger(parseFloat(number))) {
-                    var number = "1";
-                }
-                let formData = new FormData();
-                formData.append('number', parseFloat(number)+1);
-                fetch('/record/go_to/', { method: 'POST', body: formData, headers: {'X-CSRFToken': csrftoken}})
-                .then(response => response.json())
-                .then(data => {
-                    document.querySelector('h3').textContent = data['sentence'];
-                    document.querySelector('p').textContent = data['number'];
-                })
-                .catch((error) => console.error(error));
-            };
+        <script type="text/javascript">
+            var static_url = "{% static 'js/javascripts/' %}";
         </script>
+        <script src="{% static '/js/recording.js' %}"></script>
     </body>
 </html>

@@ -1,0 +1,104 @@
+.top-left-link {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+    color: white;
+}
+.start-recording-button {
+    font-size: 70px;
+    color: #435f7a;
+    cursor: pointer;
+    opacity: .5;
+    margin-bottom: 30px;
+}
+.start-recording-button:hover {
+    opacity: 1;
+}
+.fa{
+    font-size: 25px;
+    opacity: 1;
+    cursor: pointer;
+}
+.fa:hover{
+    opacity: 0.7;
+}
+.recording-contorl-buttons-container {
+    /*targeting Chrome & Safari*/
+    display: -webkit-flex;
+    /*targeting IE10*/
+    display: -ms-flex;
+    display: flex;
+    justify-content: space-evenly;
+    /*horizontal centering*/
+    align-items: center;
+    width: 334px;
+    margin-bottom: 30px;
+}
+.stop-recording-button {
+    font-size: 50px;
+    cursor: pointer;
+}
+.stop-recording-button {
+    color: #33cc33;
+    opacity: 0.7;
+}
+.stop-recording-button:hover {
+    color: #27a527;
+}
+.recording-contorl-buttons-container.hide {
+    display: none;
+}
+.start-recording-button {
+    font-size: 50px;
+    color: white;
+    cursor: pointer;
+}
+body {
+    background-color: rgb(44, 44, 44);
+    font-family: "Lato", sans-serif;
+}
+footer div {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    color: rgb(44, 44, 44);
+}
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: rgb(44, 44, 44);
+}
+.number{
+    color: rgb(44, 44, 44);
+    font-weight: bold;
+}
+button {
+    margin: 5px;
+}
+h3 {
+    color: white;
+    font-weight: normal;
+    font-size: x-large;
+    text-align: center;
+}
+.recording-message {
+    color: white;
+    font-weight: normal;
+    font-size: large;
+}
+p {
+    color: rgb(44, 44, 44);
+    font-weight: normal;
+    font-size: x-large;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    color: rgb(44, 44, 44);
+    text-align: center;
+}

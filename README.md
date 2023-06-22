@@ -9,12 +9,13 @@ To set up the Audio Recording software, follow these steps after downloading:
 
   3. **Audio Folder:** Create a folder named audios at the root level. This is where the recorded audio files will be stored.
 
-  4. **Create Superuser:** Use the command `python manage.py createsuperuser` to create a superuser.
+  5. **Migrate Database** Use the command `python manage.py migrate` to migrate your the tables to the database.
 
-  5. **Migrate Superuser:** Use the command `python manage.py migrate` to migrate your new superuser to the database.
-  6. **Create User:** Use the python script 'create_user.py' (edit according to your needs) or through the admin dashboard (accessible by typing 'address_of_your_website/admin' - recommended). A user login is required to access the main page.
+  6. **Create Superuser:** Use the command `python manage.py createsuperuser` to create a superuser.
+     
+  7. **Create User:** Use the python script 'create_user.py' (edit according to your needs) or through the admin dashboard (accessible by typing 'address_of_your_website/admin' - recommended). A user login is required to access the main page.
 
-  7. **Update Hosts:** Add your host to the ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS fields in audio_recording/settings.py.
+  8. **Update Hosts:** Add your host to the ALLOWED_HOSTS and CSRF_TRUSTED_ORIGINS fields in audio_recording/settings.py.
 
 Now you're ready to launch the server. If running on a server, use python manage.py runserver 0.0.0.0:4000, replacing 4000 with your preferred port. Access the web interface at 'https://name_of_your_serv:4000'. For local execution, use python manage.py runserver 4000 and access the software at '127.0.0.1:4000' in your web browser.
 
