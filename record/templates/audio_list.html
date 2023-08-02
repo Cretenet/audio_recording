@@ -27,7 +27,7 @@
      <div class="main">
         <div class="col-md-6 col-sm-12">
             <br>
-            {% for audio in audio_files %}
+            {% for audio in audio_files|slice:":100" %}
             <div class="audio_item">
                 <p>{{ audio }}</p>
                 <audio controls>

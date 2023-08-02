@@ -75,7 +75,7 @@ def login(request):
 def audio_list(request):
     storage = FileSystemStorage(location=settings.MEDIA_ROOT)
     audio_files = storage.listdir('')[1] # Get only the files in the directory
-    return render(request, 'audio_list.html', {'audio_files': audio_files})
+    return render(request, 'audio_list.html', {'audio_files': audio_files[::-1]})
 
 
 def download_all(request):
