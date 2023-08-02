@@ -2,4 +2,5 @@ audios
 metadata.csv
 db.sqlite3
 record/__pycache__
+record/migrations/__pycache__
 audio_recording/__pycache__
